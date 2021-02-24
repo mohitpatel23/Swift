@@ -1,0 +1,64 @@
+(Michael 3-15-20)
+How to setup and run:
+
+1. The app is based off this tutorial: https://x-team.com/blog/slack-app-step-by-step/
+Parts 1 and 2.
+
+2. Install Node.js, the Yarn package manager, Express.js, and ngrok.
+
+3. Git clone. Type
+npm install
+to install dependencies. Login to Slack SwiftDemo and navigate to "My Apps".
+
+4. Create a .env file. This will hold the verification token under Basic Info->App Credentials
+and the access token under Install App.
+
+slack_app_token=...
+verification_token=...
+
+Git will ignore the .env file when you push later.
+
+5. From the swift git repo:
+Navigate to /src/ner-server/stanford-ner-2018-10-16.
+Type the shell script .\ner-server.sh to start the NER server.
+You can also just type the java command in the stanford folder.
+
+6. From the top-level git repo:
+yarn run dev
+And on a separate terminal:
+ngrok http 3000
+Copy the https address. 
+
+Log into swiftdemo on Slack, and go to My Apps page at: https://api.slack.com/apps. Select Swift app.
+Paste the https address onto the Event Subscriptions section's Request URL:
+[url]/api/events
+Save changes.
+
+7. Go to Swift workspace. Now when you post a new message in the support channel, the 
+message is read, the tagged entities are logged, and the message is reposted in the general channel.
+
+8. To close, individually CTRL-C all terminals. Otherwise the app or ner server may be listening at ports
+even after you've closed your text editor. If that happens, use
+
+netstat -ano | findstr :yourPortNumber
+taskkill /PID typeyourPIDhere /F
+
+where yourPortNumber is either the localhost port 3000 or the ner port 9191,
+and PID is the Process Identifier found by the first command.
+See this link: https://stackoverflow.com/questions/39632667/how-do-i-kill-the-process-currently-using-a-port-on-localhost-in-windows
+
+
+Training Instructions:
+1. Get a train and test CSV file from Mockaroo website. Specify a category per CSV - itsupport, health, or finance.
+
+2. Run csv_to_tsv.py, replacing CSV name with your CSV file name, and the string after \t with your category,
+ex. '\tHEALTH\n'
+
+3. Run extra_space_generator.py to separate words as documents and set them to lowercase. You have
+to replace all labels with all-caps again, ex. health to HEALTH
+
+4. Repeat for your test CSV file. You should have two TSV files now, one for train and test.
+
+5. Replace train4.tsv in train.prop with your new train TSV. Now you can train and check accuracy. Use:
+java -cp stanford-ner.jar edu.stanford.nlp.ie.crf.CRFClassifier -prop train.prop
+java -cp stanford-ner.jar edu.stanford.nlp.ie.crf.CRFClassifier -loadClassifier ner-model.ser.gz -testFile test2.tsv
