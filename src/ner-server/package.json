@@ -1,0 +1,34 @@
+{
+  "name": "ner-server",
+  "version": "2.0.1",
+  "description": "Server endpoint for communicating with stanford-ner server",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "body-parser": "1.12.2",
+    "express": "4.12.3",
+    "request": "*",
+    "net": "*",
+    "underscore": "1.8.3"
+  },
+  "author": "Pranav Herur",
+  "license": "ISC",
+  "directories": {
+    "example": "example"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PranavHerur/ner-server.git"
+  },
+  "keywords": [
+    "ner",
+    "keyword",
+    "extraction"
+  ],
+  "bugs": {
+    "url": "https://github.com/PranavHerur/ner-server/issues"
+  },
+  "homepage": "https://github.com/PranavHerur/ner-server"
+}
